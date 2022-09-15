@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_15_170001) do
+ActiveRecord::Schema.define(version: 2022_09_15_174313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "customer_subscriptions", id: false, force: :cascade do |t|
+  create_table "customer_subscriptions", force: :cascade do |t|
     t.bigint "customer_id"
     t.bigint "subscription_id"
     t.boolean "status"
