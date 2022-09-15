@@ -10,10 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_09_15_035621) do
+ActiveRecord::Schema.define(version: 2022_09_15_043158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "customer_subscriptions", id: false, force: :cascade do |t|
+    t.bigint "customer_id"
+    t.bigint "subscription_id"
+    t.index ["customer_id"], name: "index_customer_subscriptions_on_customer_id"
+    t.index ["subscription_id"], name: "index_customer_subscriptions_on_subscription_id"
+  end
 
   create_table "customers", force: :cascade do |t|
     t.string "firstname"
@@ -22,11 +29,11 @@ ActiveRecord::Schema.define(version: 2022_09_15_035621) do
     t.string "address"
   end
 
-  create_table "customers_subscriptions", id: false, force: :cascade do |t|
-    t.bigint "customer_id"
+  create_table "subscription_teas", id: false, force: :cascade do |t|
+    t.bigint "tea_id"
     t.bigint "subscription_id"
-    t.index ["customer_id"], name: "index_customers_subscriptions_on_customer_id"
-    t.index ["subscription_id"], name: "index_customers_subscriptions_on_subscription_id"
+    t.index ["subscription_id"], name: "index_subscription_teas_on_subscription_id"
+    t.index ["tea_id"], name: "index_subscription_teas_on_tea_id"
   end
 
   create_table "subscriptions", force: :cascade do |t|
@@ -36,13 +43,6 @@ ActiveRecord::Schema.define(version: 2022_09_15_035621) do
     t.integer "frequency"
   end
 
-  create_table "subscriptions_teas", id: false, force: :cascade do |t|
-    t.bigint "tea_id"
-    t.bigint "subscription_id"
-    t.index ["subscription_id"], name: "index_subscriptions_teas_on_subscription_id"
-    t.index ["tea_id"], name: "index_subscriptions_teas_on_tea_id"
-  end
-
   create_table "teas", force: :cascade do |t|
     t.string "title"
     t.string "description"
@@ -50,8 +50,8 @@ ActiveRecord::Schema.define(version: 2022_09_15_035621) do
     t.integer "temperature"
   end
 
-  add_foreign_key "customers_subscriptions", "customers"
-  add_foreign_key "customers_subscriptions", "subscriptions"
-  add_foreign_key "subscriptions_teas", "subscriptions"
-  add_foreign_key "subscriptions_teas", "teas"
+  add_foreign_key "customer_subscriptions", "customers"
+  add_foreign_key "customer_subscriptions", "subscriptions"
+  add_foreign_key "subscription_teas", "subscriptions"
+  add_foreign_key "subscription_teas", "teas"
 end
