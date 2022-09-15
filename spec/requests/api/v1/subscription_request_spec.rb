@@ -31,15 +31,13 @@ RSpec.describe 'Customer Subscription API' do
             expect(subscription[:attributes][:frequency]).to be_a Integer
         end
     end
-
+    
     it "subscribes a customer to a subscription" do
         customer = create(:customer)
-        customer_2 = create(:customer)
         subscriptions = create_list(:subscription, 3)
         teas = create_list(:tea, 5)
         CustomerSubscription.create(customer_id: customer.id, subscription_id: subscriptions.first.id)
-        CustomerSubscription.create(customer_id: customer_2.id, subscription_id: subscriptions.second.id)
-
+        
         post '/api/v1/subscriptions', params: { customer_id: "#{customer.id}", subscription_id: "#{subscriptions.third.id}" }
         
         
@@ -50,5 +48,25 @@ RSpec.describe 'Customer Subscription API' do
         subscription = response_body[:data]
         expect(subscription[:type]).to eq('subscription')
         expect(subscription[:attributes][:status]).to eq(true)
+    end
+    
+    it "unsubscribes a customer from a subscription" do
+        customer = create(:customer)
+        subscriptions = create_list(:subscription, 3)
+        
+        CustomerSubscription.create(customer_id: customer.id, subscription_id: subscriptions.first.id, status: true)
+        CustomerSubscription.create(customer_id: customer.id, subscription_id: subscriptions.second.id, status: true)
+        CustomerSubscription.create(customer_id: customer.id, subscription_id: subscriptions.third.id, status: true)
+
+        expect(customer.customer_subscriptions.where(status: true).count).to eq(3) 
+        
+        patch '/api/v1/subscriptions', params: { customer_id: "#{customer.id}", subscription_id: "#{subscriptions.second.id}" }
+        
+        expect(response).to be_successful
+        expect(response).to  have_http_status(200)
+        expect(customer.customer_subscriptions.where(status: true).count).to eq(2)
+        
+        message = JSON.parse(response.body, symbolize_names: true)
+        expect(message[:message]).to eq("#{subscriptions.second.title} has been cancelled")
     end
 end
