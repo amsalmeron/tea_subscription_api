@@ -41,11 +41,14 @@ RSpec.describe 'Customer Subscription API' do
         post '/api/v1/subscriptions', params: { customer_id: "#{customer.id}", subscription_id: "#{subscriptions.third.id}" }
         
         
+        
         expect(response).to be_successful
         expect(response).to  have_http_status(200)
         
         response_body = JSON.parse(response.body, symbolize_names: true)
-        subscription = response_body[:data]
+        subscription = response_body[:serializer][:data]
+        
+        expect(response_body[:subscription_active]).to eq('true') 
         expect(subscription[:type]).to eq('subscription')
         expect(subscription[:attributes][:status]).to eq(true)
     end
