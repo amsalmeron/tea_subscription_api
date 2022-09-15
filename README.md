@@ -1,24 +1,168 @@
-# README
+# Tea Subscription API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This API manages customers and their tea subscriptions.
 
-Things you may want to cover:
+## Install
 
-* Ruby version
+    git clone git@github.com:amsalmeron/tea_subscription_api.git
+    bundle install
+    rails db:{drop,create,migrate,seed}
 
-* System dependencies
+## Run the tests
 
-* Configuration
+    bundle exec rspec
 
-* Database creation
+# Endpoints
 
-* Database initialization
+## Get list of subscriptions from a customer
 
-* How to run the test suite
+### Request
 
-* Services (job queues, cache servers, search engines, etc.)
+`GET /api/v1/subscriptions`
 
-* Deployment instructions
+  Body:
+  
+    {
+      "customer_id" : "1"
+    }
 
-* ...
+### Response Body
+
+    {
+    "data": [
+        {
+            "id": "1",
+            "type": "subscription",
+            "attributes": {
+                "title": "Bronze",
+                "status": true,
+                "price": 10,
+                "frequency": 1,
+                "customer_subscriptions": [
+                    {
+                        "customer_id": 1,
+                        "subscription_id": 1,
+                        "status": true,
+                        "id": 1
+                    }
+                ]
+            }
+        },
+        {
+            "id": "2",
+            "type": "subscription",
+            "attributes": {
+                "title": "Silver",
+                "status": true,
+                "price": 30,
+                "frequency": 1,
+                "customer_subscriptions": [
+                    {
+                        "customer_id": 1,
+                        "subscription_id": 2,
+                        "status": true,
+                        "id": 2
+                    },
+                    {
+                        "customer_id": 2,
+                        "subscription_id": 2,
+                        "status": true,
+                        "id": 4
+                    }
+                ]
+            }
+        },
+        {
+            "id": "3",
+            "type": "subscription",
+            "attributes": {
+                "title": "Gold",
+                "status": true,
+                "price": 50,
+                "frequency": 2,
+                "customer_subscriptions": [
+                    {
+                        "customer_id": 1,
+                        "subscription_id": 3,
+                        "status": false,
+                        "id": 3
+                    },
+                    {
+                        "customer_id": 3,
+                        "subscription_id": 3,
+                        "status": false,
+                        "id": 6
+                    }
+                ]
+            }
+        }
+    ]
+    }
+
+## Create a new tea subscription
+
+### Request
+
+`POST /api/v1/subscriptions`
+
+  Body:
+  
+      { 
+        "customer_id" : "4", 
+        "subscription_id" : "2"
+      }
+### Response
+
+    {
+    "data": {
+        "id": "2",
+        "type": "subscription",
+        "attributes": {
+            "title": "Silver",
+            "status": true,
+            "price": 30,
+            "frequency": 1,
+            "customer_subscriptions": [
+                {
+                    "customer_id": 1,
+                    "subscription_id": 2,
+                    "status": true,
+                    "id": 2
+                },
+                {
+                    "customer_id": 2,
+                    "subscription_id": 2,
+                    "status": true,
+                    "id": 4
+                },
+                {
+                    "customer_id": 4,
+                    "subscription_id": 2,
+                    "status": true,
+                    "id": 7
+                }
+            ]
+        }
+      }
+    }
+
+## Cancel a customer subscription
+
+### Request
+
+`PATCH /api/v1/subscriptions`
+
+  Body: 
+  
+    { 
+      "customer_id" : "4", 
+      "subscription_id" : "2"
+    }
+  
+
+### Response
+
+      {
+        "message": "Silver has been cancelled"
+      }
+  
