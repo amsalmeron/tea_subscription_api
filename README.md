@@ -1,6 +1,6 @@
 # Tea Subscription API
 
-This API manages customers and their tea subscriptions.
+This API manages customers and their tea subscriptions using Ruby on Rails.
 
 ## Install
 
