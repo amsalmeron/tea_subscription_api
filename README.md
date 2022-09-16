@@ -12,6 +12,12 @@ This API manages customers and their tea subscriptions.
 
     bundle exec rspec
 
+## Database Schema
+
+<img width="917" alt="Screen Shot 2022-09-16 at 8 43 47 AM" src="https://user-images.githubusercontent.com/93031998/190678271-80b54f57-fad1-48f5-96d0-a327c0f8cf7b.png">
+
+
+
 # Endpoints
 
 ## Get list of subscriptions from a customer
